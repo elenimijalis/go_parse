@@ -14,7 +14,7 @@ with open("go.obo") as handle:
             json_objects.append(go_term)
 
             with open('%s.json' % go_term['id'], 'w') as out:
-                json.dumps(go_term)
+                json.dump(go_term, out)
 
             go_term = {}
             term_start = False
