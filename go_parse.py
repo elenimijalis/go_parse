@@ -12,6 +12,21 @@ with open("go.obo") as handle:
 
         if not line.strip() and term_start:
             json_objects.append(go_term)
+            # print re.split(r"['\"](.*?)['\"]", go_term['def'])
+
+            x = go_term['def']
+            go_term['def'] = x[1:x.rindex('[')-2]
+
+            db_xref = x[x.rindex('[')+1:-1].split(', ')
+            d = {}
+            for i in db_xref:
+                key, val = i.split(':')
+                if key in d:
+                    d[key].append(val)
+                else:
+                    d[key] = [val]
+
+            go_term['db_xref'] = d
 
             with open('%s.json' % go_term['id'], 'w') as out:
                 json.dump(go_term, out)
