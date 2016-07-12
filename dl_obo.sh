@@ -1,2 +1,4 @@
 #!/bin/bash
-wget -O go.obo http://geneontology.org/ontology/go.obo
+rm -f go.obo && \
+wget -O go.obo http://geneontology.org/ontology/go.obo && \
+python go_parse.py
