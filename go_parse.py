@@ -5,8 +5,10 @@ import argparse
 import sys
 
 def parseObo(handle, count=-1, outdir=None):
+    all_terms_out_name = handle.name[:-4]
     json_objects = []
     go_term = {}
+    all_terms = []
     term_start = False
     output_terms = 0
 
@@ -37,6 +39,7 @@ def parseObo(handle, count=-1, outdir=None):
 
             with open(out, 'w') as handle:
                 json.dump(go_term, handle)
+                all_terms.append(go_term)
                 output_terms += 1
                 if count != -1 and output_terms > count:
                     sys.exit()
@@ -51,6 +54,11 @@ def parseObo(handle, count=-1, outdir=None):
         elif line.startswith('[Term]'):
             term_start = True
 
+    outname = all_terms_out_name + '.json'
+    if outdir:
+        outname = os.path.join(outdir, outname)
+    with open(outname, 'w') as outfile:
+        json.dump(all_terms, outfile)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
