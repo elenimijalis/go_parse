@@ -5,7 +5,7 @@ import argparse
 import sys
 
 def parseObo(handle, count=-1, outdir=None):
-    all_terms_out_name = handle.name[:-4]
+    all_terms_out_name = None
     json_objects = []
     go_term = {}
     all_terms = []
@@ -29,9 +29,14 @@ def parseObo(handle, count=-1, outdir=None):
                     else:
                         d[key] = [val]
                 else:
-                    print i
+                    print(i)
 
             go_term['db_xref'] = d
+
+            # First time only, we set the all terms output file
+            if not all_terms_out_name:
+                # Given "GO:1023123" we strip off everything after : to get "GO"
+                all_terms_out_name = go_term['id'][0:go_term['id'].index(':')]
 
             out = '%s.json' % go_term['id']
             if outdir:
@@ -62,7 +67,7 @@ def parseObo(handle, count=-1, outdir=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('obo', type=file, help='Path to OBO file')
+    parser.add_argument('obo', type=argparse.FileType('r'), help='Path to OBO file')
     parser.add_argument('--count', type=int, help="Maximum number of OBO terms to dump before quitting. Useful in testing", default=-1)
     parser.add_argument('--outdir', help="output directory")
     args = parser.parse_args()
